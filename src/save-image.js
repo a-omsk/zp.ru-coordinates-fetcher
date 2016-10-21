@@ -1,10 +1,10 @@
 const { createWriteStream } = require('fs');
 
-const saveImage = path => result => new Promise(resolve => {
-    const stream = createWriteStream(`${path}/${result.name}.png`);
+const saveImage = (path, name, image) => new Promise(resolve => {
+    const stream = createWriteStream(`${path}/${name}.png`);
 
-    result.image.pipe(stream);
-    result.image.on('end', () => resolve(result));
+    image.pipe(stream);
+    image.on('end', resolve);
 });
 
 module.exports = saveImage;

@@ -1,12 +1,9 @@
 const cluster = require('cluster');
+const work = require('./work');
 
 const prepareImageDir = require('./prepare-image-dir');
 const prepareWorkers = require('./prepare-workers');
 const chainPromises = require('./chain-promises');
-
-const fetchGeo = require('./fetch-geo');
-const fetchCoordinates = require('./fetch-coordinates');
-const fetchImages = require('./fetch-images');
 
 const readIds = require('./read-ids');
 const subscribeToData = require('./subscribe-to-data');
@@ -21,23 +18,7 @@ const outputFile = process.argv[3] || 'output.txt';
 const imageDir = process.argv[4] || 'img';
 
 if (cluster.isWorker) {
-    const sendMgs = type => result => {
-        process.send({ type, result });
-        return result;
-    };
-
-    process.on('message', id => {
-        const pipes = [
-            fetchGeo,
-            fetchCoordinates,
-            sendMgs(WRITE_OUTPUT),
-            fetchImages,
-            saveImage(imageDir),
-            sendMgs(CLEAN_QUEUE)
-        ];
-
-        chainPromises(pipes, id).catch(err => console.error(err));
-    });
+    process.on('message', work);
 }
 
 if (cluster.isMaster) {

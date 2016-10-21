@@ -9,6 +9,7 @@
   "author": "Artur Shelashskiy <a-omsk@riseup.net>",
   "license": "GPL-3.0",
   "dependencies": {
+    "co": "^4.6.0",
     "lodash": "^4.15.0",
     "node-fetch": "^1.6.0"
   }

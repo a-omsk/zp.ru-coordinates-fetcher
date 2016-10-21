@@ -20,13 +20,11 @@ const findProperty = property => flow(
 const findBoundingBox = findProperty('boundedBy.Envelope');
 const findCentroid = findProperty('Point');
 
-const prepareResult = geo => result => Object.assign(geo, {
-    centroid: head(findCentroid(result)),
-    boundingBox: findBoundingBox(result)
-});
-
 module.exports = function fetchCoordinates(geo) {
     return fetch(generateUrl(geo.name))
         .then(data => data.json())
-        .then(prepareResult(geo));
+        .then(result => ({
+            centroid: head(findCentroid(result)),
+            boundingBox: findBoundingBox(result)
+        }));
 };

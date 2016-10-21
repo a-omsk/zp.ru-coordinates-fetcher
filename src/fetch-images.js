@@ -9,11 +9,6 @@ function generateUrl(centroid) {
     return `https://static-maps.yandex.ru/1.x/?l=map&pt=${center}&z=8`;
 }
 
-const prepareResult = data => response => Object.assign(data, {
-    image: response.body
-});
-
-module.exports = function fetchImages(data) {
-    return fetch(generateUrl(data.centroid))
-        .then(prepareResult(data));
+module.exports = function fetchImages(centroid) {
+    return fetch(generateUrl(centroid)).then(response => response.body);
 };
